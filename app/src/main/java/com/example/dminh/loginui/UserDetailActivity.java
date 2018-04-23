@@ -52,6 +52,11 @@ public class UserDetailActivity extends AppCompatActivity implements View.OnClic
         mAuth.signOut();
         startActivity(new Intent(UserDetailActivity.this, MainActivity.class));
         Toast.makeText(this, "Signed Out", Toast.LENGTH_SHORT).show();
+        SharedPreferences sharedPreferences = getSharedPreferences(ContraintValue.SHARE_FILE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(ContraintValue.USER_EMAIL);
+        editor.remove(ContraintValue.USER_TOKEN);
+        editor.apply();
         finish();
     }
 

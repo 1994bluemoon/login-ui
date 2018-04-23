@@ -102,7 +102,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="#FFA000"
         android:text="SIGN UP"
         android:textColor="#fefefe"

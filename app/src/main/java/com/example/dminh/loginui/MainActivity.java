@@ -64,14 +64,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showSignInSuccess(FirebaseUser currentUser) {
+        Toast.makeText(this, "Logged In", Toast.LENGTH_SHORT).show();
         SharedPreferences sharedPreferences = getSharedPreferences(ContraintValue.SHARE_FILE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(ContraintValue.USER_EMAIL, currentUser.getEmail());
         editor.putString(ContraintValue.USER_TOKEN, currentUser.getUid());
         editor.apply();
-        startActivity(new Intent(MainActivity.this, UserDetailActivity.class).putExtra("user", currentUser));
+        startActivity(new Intent(MainActivity.this, UserDetailActivity.class));
         progressDialog.cancel();
-        Toast.makeText(this, "Signed In", Toast.LENGTH_SHORT).show();
         finish();
     }
 
