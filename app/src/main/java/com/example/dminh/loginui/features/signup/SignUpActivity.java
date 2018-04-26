@@ -1,4 +1,4 @@
-package com.example.dminh.loginui;
+package com.example.dminh.loginui.features.signup;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -6,13 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dminh.loginui.R;
+import com.example.dminh.loginui.features.signin.SignInActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,12 +32,19 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String password, email;
     private ProgressDialog progressDialog;
+    private Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         initilizeId();
+
+        setSupportActionBar(myToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Sign Up");
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mAuth = FirebaseAuth.getInstance();
 
         tvSignIn.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("create", "createUserWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
-                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                        startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
                         progressDialog.cancel();
                         finish();
                     } else {
@@ -86,12 +96,24 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void initilizeId() {
         tvSignIn = findViewById(R.id.tv_sign_in);
         edtPassword = findViewById(R.id.edt_password);
         edtrePassword = findViewById(R.id.edt_password2);
         edtEmail = findViewById(R.id.edt_email);
         btnSignUp = findViewById(R.id.btn_sign_up);
+        myToolbar = findViewById(R.id.my_toolbar_sign_up);
 
         progressDialog = new ProgressDialog(this);
         enableUi();

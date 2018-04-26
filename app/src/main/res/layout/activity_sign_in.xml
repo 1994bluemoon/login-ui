@@ -5,7 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#9C27B0"
-    tools:context="com.example.dminh.loginui.MainActivity">
+    tools:context="com.example.dminh.loginui.features.signin.SignInActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionBarSize"
+        android:background="#9C27B0"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="#ffffff" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -15,11 +29,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar_sign_in" />
 
 
     <android.support.design.widget.TextInputLayout

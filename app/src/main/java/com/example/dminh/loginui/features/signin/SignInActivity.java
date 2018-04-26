@@ -1,4 +1,4 @@
-package com.example.dminh.loginui;
+package com.example.dminh.loginui.features.signin;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -7,13 +7,17 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dminh.loginui.appcontraint.ContraintValue;
+import com.example.dminh.loginui.R;
+import com.example.dminh.loginui.features.note.NoteActivity;
+import com.example.dminh.loginui.features.signup.SignUpActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -22,7 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private String email, password;
@@ -30,12 +34,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnSignIn;
     private TextView tvCreateNew;
     private ProgressDialog progressDialog;
+    private Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_in);
         initializeId();
+
+        setSupportActionBar(myToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Sign In");
+        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -44,7 +54,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         btnSignIn.setOnClickListener(this);
         tvCreateNew.setOnClickListener(this);
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -59,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.tv_create_new:
-                startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+                startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
         }
     }
 
@@ -70,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor.putString(ContraintValue.USER_EMAIL, currentUser.getEmail());
         editor.putString(ContraintValue.USER_TOKEN, currentUser.getUid());
         editor.apply();
-        startActivity(new Intent(MainActivity.this, UserDetailActivity.class));
+        startActivity(new Intent(SignInActivity.this, NoteActivity.class));
         progressDialog.cancel();
         finish();
     }
@@ -80,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         edtPassword = findViewById(R.id.edt_password);
         btnSignIn = findViewById(R.id.btn_sign_in);
         tvCreateNew = findViewById(R.id.tv_create_new);
+        myToolbar = findViewById(R.id.my_toolbar_sign_in);
         progressDialog = new ProgressDialog(this);
         enableUi();
     }
@@ -117,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("log in", "signInWithEmail:failure", task.getException());
-                    Toast.makeText(MainActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                     enableUi();
                 }
             }
