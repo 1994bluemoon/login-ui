@@ -7,9 +7,9 @@
         <item name="colorPrimaryDark">#6A1B9A</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="colorControlNormal">#6A1B9A</item>
 
-        <item name="colorControlActivated">#FFFFFF</item>
+        <item name="colorControlActivated">#6A1B9A</item>
 
         <item name="colorControlHighlight">#FF5722</item>
     </style>

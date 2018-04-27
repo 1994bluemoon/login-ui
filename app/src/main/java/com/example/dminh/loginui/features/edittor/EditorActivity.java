@@ -21,16 +21,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.DateFormat;
 import java.util.Objects;
 
 public class EditorActivity extends AppCompatActivity {
 
     private DatabaseReference myRef;
+    FirebaseDatabase database;
+
     private EditText edtTitle, edtContent;
-    Note note;
+    private Note note;
     boolean isEdit = false;
 
     @Override
@@ -56,7 +56,7 @@ public class EditorActivity extends AppCompatActivity {
         }
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         if (mAuth != null){
             myRef = database.getReference(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
@@ -64,9 +64,9 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
+    protected void onStop() {
         saveNote();
-        super.onPause();
+        super.onStop();
     }
 
     @Override
@@ -98,7 +98,6 @@ public class EditorActivity extends AppCompatActivity {
         if (note == null){
             if (!edtContent.getText().toString().equals("")){
                 String title;
-                Calendar calendar = Calendar.getInstance();
                 if (edtTitle.getText().toString().equals("")){
                     try {
                         title = edtContent.getText().toString().substring(0, 20);
@@ -107,28 +106,32 @@ public class EditorActivity extends AppCompatActivity {
                     }
                 } else title = edtTitle.getText().toString();
 
-                String date = String.valueOf(calendar.get(Calendar.YEAR)) +"-" + String.valueOf(calendar.get(Calendar.MONTH) + 1) + "-"+ String.valueOf(calendar.get(Calendar.DATE));
+                String date = DateFormat.getDateTimeInstance().format(new java.util.Date());
+
                 note = new Note(date, edtContent.getText().toString(), title, String.valueOf(System.currentTimeMillis()));
+
                 uploadFireBase(note);
             }
         } else {
             if (!edtContent.getText().toString().equals("")) {
-                String title;
-                Calendar calendar = Calendar.getInstance();
-                if (edtTitle.getText().toString().equals("")) {
-                    try {
-                        title = edtContent.getText().toString().substring(0, 20);
-                    } catch (Exception ex) {
-                        title = edtContent.getText().toString();
-                    }
-                } else title = edtTitle.getText().toString();
+                if (!note.getNoteTitle().equals(edtTitle.getText().toString()) || !note.getNoteContent().equals(edtContent.getText().toString())) {
+                    String title;
+                    if (edtTitle.getText().toString().equals("")) {
+                        try {
+                            title = edtContent.getText().toString().substring(0, 20);
+                        } catch (Exception ex) {
+                            title = edtContent.getText().toString();
+                        }
+                    } else title = edtTitle.getText().toString();
 
-                String date = String.valueOf(calendar.get(Calendar.YEAR)) + "-" + String.valueOf(calendar.get(Calendar.MONTH) + 1) + "-" + String.valueOf(calendar.get(Calendar.DATE));
+                    String date = DateFormat.getDateTimeInstance().format(new java.util.Date());
 
-                note.setNoteTitle(title);
-                note.setNoteContent(edtContent.getText().toString());
-                note.setDateCreated(date);
-                uploadFireBase(note);
+                    note.setNoteTitle(title);
+                    note.setNoteContent(edtContent.getText().toString());
+                    note.setDateCreated(date);
+
+                    uploadFireBase(note);
+                }
             }else {
                 myRef.child(note.getKey()).removeValue();
                 Toast.makeText(EditorActivity.this, "Note removed", Toast.LENGTH_SHORT).show();

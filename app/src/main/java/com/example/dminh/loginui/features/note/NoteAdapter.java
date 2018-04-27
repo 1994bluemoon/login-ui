@@ -17,6 +17,9 @@ import android.widget.TextView;
 import com.example.dminh.loginui.R;
 import com.example.dminh.loginui.models.Note;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +49,16 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.tvTitle.setText(notes.get(position).getNoteTitle());
         holder.tvContent.setText(notes.get(position).getNoteContent());
-        holder.tvDateCreated.setText(notes.get(position).getDateCreated());
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+           java.util.Date date = dateFormat.parse(notes.get(position).getDateCreated());
+           String result = dateFormat.format(date);
+            holder.tvDateCreated.setText(result);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         holder.clNoteItem.setOnClickListener(new View.OnClickListener() {
             @Override

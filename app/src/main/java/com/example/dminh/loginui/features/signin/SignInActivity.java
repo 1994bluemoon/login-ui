@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
@@ -35,6 +36,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private TextView tvCreateNew;
     private ProgressDialog progressDialog;
     private Toolbar myToolbar;
+    long back_pressed_time = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +46,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         setSupportActionBar(myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Sign In");
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -58,7 +58,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if ( back_pressed_time + 2000 > System.currentTimeMillis()){
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }
+        else Toast.makeText(getBaseContext(), "Press back again to exit!", Toast.LENGTH_SHORT).show();
+        back_pressed_time = System.currentTimeMillis();
     }
 
     @Override
@@ -78,6 +86,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void showSignInSuccess(FirebaseUser currentUser) {
+        try{
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        } catch (Exception ignored){}
         Toast.makeText(this, "Logged In", Toast.LENGTH_SHORT).show();
         SharedPreferences sharedPreferences = getSharedPreferences(ContraintValue.SHARE_FILE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
